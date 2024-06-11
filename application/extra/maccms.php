@@ -190,7 +190,7 @@ return array (
   'interface' => 
   array (
     'status' => 0,
-    'pass' => '2RK20D7UKAWWC5RV',
+    'pass' => 'AHFQYBVEMAHFRI8R',
     'vodtype' => '动作片=动作',
     'arttype' => '头条=头条',
     'actortype' => '',
