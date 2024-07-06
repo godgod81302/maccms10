@@ -1219,7 +1219,7 @@ h6 {
 }
 
 .h-sidenav {
-  height: calc(100vh - 370px);
+  height: calc(100vh - 255px);
 }
 
 .h-8 {
@@ -3704,6 +3704,14 @@ h6 {
 .group:hover .group-hover\:-translate-x-1 {
   --tw-translate-x: -0.25rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.nav-icon-selected {
+  color: var(--fa-inverse, #fff);
+  --tw-gradient-from: #17ad37;
+  --tw-gradient-to: rgb(23 173 55 / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+
 }
 
 @media (min-width: 576px) {

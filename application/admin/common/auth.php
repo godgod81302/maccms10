@@ -1,10 +1,11 @@
 <?php
 return array(
 
-    '1' => array('name' => lang('menu/index'), 'icon' => 'xe625', 'sub' => array(
+    '1' => array('name' => lang('menu/index'), 'icon' => 'xe625', 'nav-icon' => 'fa-house',
+    'sub' => array(
         '11' => array("show"=>1,"name" =>lang('menu/welcome'), 'controller' => 'index', 'action' => 'welcome'),
         '12' => array("show"=>1,"name" =>lang('menu/quickmenu'), 'controller' => 'index', 'action' => 'quickmenu'),
-
+        '10' => array("show"=>1,"name" =>lang('menu/get_system_status'), 'controller' => 'system', 'action' => 'statuschart'),
         '1001' => array("show"=>0,"name" => '--切换布局', 'controller' => 'index', 'action' => 'iframe'),
         '1002' => array("show"=>0,"name" => '--清理缓存', 'controller' => 'index', 'action' => 'clear'),
         '1003' => array("show"=>0,"name" => '--锁屏解锁', 'controller' => 'index', 'action' => 'unlocked'),
@@ -13,7 +14,8 @@ return array(
 
     )),
 
-    '2' => array('name' => lang('menu/system'), 'icon' => 'xe62e', 'sub' => array(
+    '2' => array('name' => lang('menu/system'), 'icon' => 'xe62e', 'nav-icon' => 'fa-gear',
+    'sub' => array(
         '21' => array("show"=>1,'name' => lang('menu/config'), 'controller' => 'system',				'action' => 'config'),
         '210' => array("show"=>1,"name" => lang('menu/configseo'), 'controller' => 'system',			'action' => 'configseo'),
         '211' => array("show"=>1,"name" => lang('menu/configuser'), 'controller' => 'system',			'action' => 'configuser'),
@@ -40,7 +42,8 @@ return array(
         '2924' => array("show"=>0,'name' => '--站群导入', 'controller' => 'domain',		'action' => 'import'),
     )),
 
-    '3' => array('name' => lang('menu/base'), 'icon' => 'xe64b', 'sub' => array(
+    '3' => array('name' => lang('menu/base'), 'icon' => 'xe64b', 'nav-icon' => 'fa-layer-group',
+    'sub' => array(
         '31' => array("show"=>1,'name' => lang('menu/type'), 'controller' => 'type',		'action' => 'index'),
 
         '3101' => array("show"=>0,'name' => '--分类信息维护', 'controller' => 'type',		'action' => 'info'),
@@ -82,7 +85,8 @@ return array(
         '3603' => array("show"=>0,'name' => '--同步图片方法', 'controller' => 'images',		'action' => 'sync'),
     )),
 
-    '5' => array('name' => lang('menu/art'), 'icon' => 'xe616', 'sub' => array(
+    '5' => array('name' => lang('menu/art'), 'icon' => 'xe616', 'nav-icon' => 'fa-newspaper',
+    'sub' => array(
 
         '51' => array("show"=>1,'name' => lang('menu/art_data'), 'controller' => 'art',		'action' => 'data'),
         '5101' => array("show"=>0,'name' => '--文章信息维护', 'controller' => 'art',		'action' => 'info'),
@@ -97,7 +101,8 @@ return array(
     )),
 
 
-    '4' => array('name' => lang('menu/vod'), 'icon' => 'xe639', 'sub' => array(
+    '4' => array('name' => lang('menu/vod'), 'icon' => 'xe639', 'nav-icon' => 'fa-video',
+    'sub' => array(
         '41' => array("show"=>1,'name' => lang('menu/server'), 'controller' => 'vodserver',		'action' => 'index'),
         '4101' => array("show"=>0,'name' => '--服务器组信息维护', 'controller' => 'vodserver',		'action' => 'info'),
         '4102' => array("show"=>0,'name' => '--服务器组删除', 'controller' => 'vodserver',		'action' => 'del'),
@@ -141,7 +146,8 @@ return array(
     )),
 
 
-    '12' => array('name' => lang('menu/website'), 'icon' => 'xe616', 'sub' => array(
+    '12' => array('name' => lang('menu/website'), 'icon' => 'xe616', 'nav-icon' => 'fa-globe',
+    'sub' => array(
 
         '121' => array("show"=>1,'name' => lang('menu/website_data'), 'controller' => 'website',		'action' => 'data'),
         '12101' => array("show"=>0,'name' => '--网址信息维护', 'controller' => 'website',		'action' => 'info'),
@@ -155,7 +161,8 @@ return array(
         '1291' => array("show"=>1,'name' => lang('menu/website_repeat'), 'controller' => 'website',		'action' => 'data', 'param'=>'repeat=1'),
     )),
 
-    '6' => array('name' => lang('menu/users'), 'icon' => 'xe62c', 'sub' => array(
+    '6' => array('name' => lang('menu/users'), 'icon' => 'xe62c', 'nav-icon' => 'fa-address-card',
+    'sub' => array(
         '61' => array("show"=>1,'name' => lang('menu/admin'), 'controller' => 'admin',		'action' => 'index'),
         '6101' => array("show"=>0,'name' => '--管理员信息维护', 'controller' => 'admin',		'action' => 'info'),
         '6102' => array("show"=>0,'name' => '--管理员删除', 'controller' => 'admin',		'action' => 'del'),
@@ -190,7 +197,8 @@ return array(
 
     )),
 
-    '7' => array('name' => lang('menu/templates'), 'icon' => 'xe72d', 'sub' => array(
+    '7' => array('name' => lang('menu/templates'), 'icon' => 'xe72d', 'nav-icon' => 'fa-palette',
+    'sub' => array(
         '71' => array("show"=>1,'name' => lang('menu/template'), 'controller' => 'template',		'action' => 'index'),
         '7101' => array("show"=>0,'name' => '--模板信息维护', 'controller' => 'template',		'action' => 'info'),
         '7102' => array("show"=>0,'name' => '--模板删除', 'controller' => 'template',		'action' => 'del'),
@@ -199,7 +207,8 @@ return array(
         '73' => array("show"=>1,'name' => lang('menu/wizard'), 'controller' => 'template',		'action' => 'wizard'),
     )),
 
-    '8' => array('name' => lang('menu/make'), 'icon' => 'xe63e', 'sub' => array(
+    '8' => array('name' => lang('menu/make'), 'icon' => 'xe63e', 'nav-icon' => 'fa-industry',
+    'sub' => array(
         '81' => array("show"=>1,'name' => lang('menu/make_opt'), 'controller' => 'make',		'action' => 'opt'),
         '82' => array("show"=>1,'name' => lang('menu/make_index'), 'controller' => 'make',		'action' => 'index'),
         '821' => array("show"=>1,'name' => lang('menu/make_index_wap'), 'controller' => 'make',		'action' => 'index?ac2=wap'),
@@ -217,7 +226,8 @@ return array(
 
     )),
 
-    '9' => array('name' => lang('menu/cjs'), 'icon' => 'xe727', 'sub' => array(
+    '9' => array('name' => lang('menu/cjs'), 'icon' => 'xe727', 'nav-icon' => 'fa-magnifying-glass',
+    'sub' => array(
         '91' => array("show"=>0,'name' => lang('menu/union'), 'controller' => 'collect',		'action' => 'union'),
         '9101' => array("show"=>0,'name' => '--采集入口', 'controller' => 'collect',		'action' => 'api'),
         '9102' => array("show"=>0,'name' => '--断点采集', 'controller' => 'collect',		'action' => 'load'),
@@ -242,7 +252,8 @@ return array(
 
     )),
 
-    '10' => array('name' => lang('menu/db'), 'icon' => 'xe621', 'sub' => array(
+    '10' => array('name' => lang('menu/db'), 'icon' => 'xe621', 'nav-icon' => 'fa-database',
+    'sub' => array(
         '101' => array("show"=>1,'name' => lang('menu/database'), 'controller' => 'database',		'action' => 'index'),
         '10001' => array("show"=>0,'name' => '--数据库备份', 'controller' => 'database',		'action' => 'export'),
         '10002' => array("show"=>0,'name' => '--数据库还原', 'controller' => 'database',		'action' => 'import'),
@@ -254,7 +265,9 @@ return array(
         '102' => array("show"=>1,'name' => lang('menu/database_sql'), 'controller' => 'database',		'action' => 'sql'),
         '103' => array("show"=>1,'name' => lang('menu/database_rep'), 'controller' => 'database',		'action' => 'rep'),
     )),
-    '11' => array('name' => lang('menu/apps'), 'icon' => 'xe621', 'sub' => array(
+
+    '11' => array('name' => lang('menu/apps'), 'icon' => 'xe621', 'nav-icon' => 'fa-plug',
+    'sub' => array(
         '111' => array("show"=>1,'name' => lang('menu/addon'), 'controller' => 'addon',		'action' => 'index', 'param'=>''),
         '112' => array("show"=>1,'name' => lang('menu/urlsend'), 'controller' => 'urlsend',		'action' => 'index', 'param'=>''),
         '113' => array("show"=>1,'name' => lang('menu/safety_file'), 'controller' => 'safety',		'action' => 'file', 'param'=>''),

@@ -217,6 +217,12 @@ return array (
       'type' => '1,2',
       'act' => '0',
     ),
+    'epay' => 
+    array (
+      'api_url' => '',
+      'appid' => '',
+      'appkey' => '',
+    ),
     'weixin' => 
     array (
       'appid' => '222',
@@ -226,7 +232,7 @@ return array (
     'zhapay' => 
     array (
       'appid' => '18039',
-      'appkey' => '',
+      'appkey' => 'fwegfaewrgraeg',
       'type' => '1,2',
       'act' => '2',
     ),

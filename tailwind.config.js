@@ -10,6 +10,7 @@ module.exports = {
   "./static/**/*.{html,js,css}",
   "./upload/**/*.{html,js,css}",
   "./application/admin/view//customui/greem/type/*.{html,js,css}",
+  'node_modules/preline/dist/*.js',
     ],
   },
   theme: {
@@ -31,5 +32,5 @@ module.exports = {
   },
   variants: {},
 
-  plugins: ["tailwindcss ,autoprefixer,postcss-import"], 
+  plugins: ["tailwindcss ,autoprefixer,postcss-import,preline/plugin"], 
 }

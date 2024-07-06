@@ -728,5 +728,14 @@ class System extends Base
         return $this->fetch('admin@system/configseo');
     }
 
+    public function statuschart()
+    {
+        $os_data=[];
+        $os_data = (new Index)->get_system_status();
+
+        $this->assign('os_data',$os_data);
+        return $this->fetch('admin@system/statuschart');
+    }
+
 
 }

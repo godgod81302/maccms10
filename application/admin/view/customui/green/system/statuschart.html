@@ -1,0 +1,192 @@
+{include file="../../../application/admin/view/customui/green/public/head" /}
+<!-- Header -->
+
+        <div class="grid md:grid-cols-2 items-start gap-2 md:gap-4">
+            <div class="space-y-1">
+              <h4 class="text-2xl md:text-2xl font-medium text-blue-600 dark:text-blue-500">
+                <span class="bg-clip-text bg-gradient-to-tl from-blue-500 to-violet-500 text-transparent">
+                  System Status - {$os_data['os_name']}
+                </span>
+              </h4>
+            </div>
+
+          </div>
+
+          <div class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
+             {if condition="!empty($os_data['cpu_usage'])"}
+             <div class="space-y-4 flex flex-col bg-white  rounded-xl dark:bg-neutral-800 dark:border-neutral-700 text-center">
+              <div id="chart_cpu_usage" class="min-h-[415px] "></div>
+              <h3 class="md:text-lg font-medium text-gray-800 dark:text-neutral-200">CPU usage</h3>
+             </div>
+             {/if}
+             {if condition="!empty($os_data['mem_usage']) && !empty($os_data['mem_total']) && !empty($os_data['mem_used'])"}
+             <div class="space-y-4 flex flex-col bg-white  rounded-xl dark:bg-neutral-800 dark:border-neutral-700 text-center">
+               <div id="chart_mem_usage" class="min-h-[415px] "></div>
+               <h3 id="mem_data" class="md:text-lg font-medium text-gray-800 dark:text-neutral-200">{$os_data['mem_used']} MB/ {$os_data['mem_total']} MB</h3>
+             </div>
+            {/if}
+            {volist name="os_data['disk_datas']" id="disk_data" key="disk_count" }
+              <div class="space-y-4 flex flex-col bg-white  rounded-xl dark:bg-neutral-800 dark:border-neutral-700 text-center">
+                <div id="chart_{$disk_count}" class="min-h-[415px] "></div>
+                <h3 id="disk_data_{$disk_count}"class="md:text-lg font-medium text-gray-800 dark:text-neutral-200">{$disk_data[1]-$disk_data[0]} GB/{$disk_data[1]} GB</h3>
+              </div>
+            {/volist}
+          </div>
+{include file="../../../application/admin/view/customui/green/public/foot" /}
+<script type="text/javascript">
+        var options = {
+          series: [0],
+          chart: {
+          height: 200,
+          type: 'radialBar',
+          toolbar: {
+            show: false
+          }
+        },
+        plotOptions: {
+          radialBar: {
+            startAngle: -135,
+            endAngle: 225,
+             hollow: {
+              margin: 0,
+              size: '70%',
+              background: '#fff',
+              image: undefined,
+              imageOffsetX: 0,
+              imageOffsetY: 0,
+              position: 'front',
+              dropShadow: {
+                enabled: true,
+                top: 3,
+                left: 0,
+                blur: 4,
+                opacity: 0.24
+              }
+            },
+            track: {
+              background: '#fff',
+              strokeWidth: '67%',
+              margin: 0, // margin is in pixels
+              dropShadow: {
+                enabled: true,
+                top: -3,
+                left: 0,
+                blur: 4,
+                opacity: 0.35
+              }
+            },
+        
+            dataLabels: {
+              show: true,
+              name: {
+                offsetY: -7,
+                color: '#5bc66f',
+                fontSize: '33px'
+              },
+              value: {
+                color: '#111',
+                fontSize: '26px',
+                show: true,
+              }
+            }
+          }
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'dark',
+            type: 'horizontal',
+            shadeIntensity: 0.5,
+            gradientToColors: ['#ABE5A1'],
+            inverseColors: true,
+            opacityFrom: 1,
+            opacityTo: 1,
+            stops: [0, 100]
+          }
+        },
+        stroke: {
+          lineCap: 'round'
+        },
+
+        labels: ['disk'],
+        };
+        $("a[href^='#']").on("click", function(e){
+  e.preventDefault();
+  //return false;
+});
+
+</script>
+{volist name="os_data['disk_datas']" id="disk_data" key="disk_count" }
+<script>
+  var chart_{$disk_count} = new ApexCharts(document.querySelector("#chart_{$disk_count}"), options);
+  chart_{$disk_count}.render();
+  chart_{$disk_count}.updateOptions({
+    labels: ['{$key}{if condition="$os_data['os_name']=='WINDOWS'"}:/{/if}'.toUpperCase()],
+    series: [{$disk_data[2]}],
+  });
+
+
+</script>
+{/volist}
+{if condition="!empty($os_data['cpu_usage'])"}
+<script>
+  var chart_cpu_usage = new ApexCharts(document.querySelector("#chart_cpu_usage"), options);
+  chart_cpu_usage.render();
+  chart_cpu_usage.updateOptions({
+    labels: ['Cpu'],
+    series: [{$os_data['cpu_usage']}],
+  });
+</script>
+{/if}
+{if condition="!empty($os_data['mem_usage']) && !empty($os_data['mem_total']) && !empty($os_data['mem_used'])"}
+<script>
+  var chart_mem_usage = new ApexCharts(document.querySelector("#chart_mem_usage"), options);
+  chart_mem_usage.render();
+  chart_mem_usage.updateOptions({
+    labels: ['Ram'],
+    series: [{$os_data['mem_usage']}],
+  });
+</script>
+{/if}
+<script>
+  
+  function update_system_status(){
+  $.ajax({
+    url: '/admin.php/admin/index/get_system_status.html', 
+    method: "GET",
+    success: function(data) {
+      console.log(data) 
+      if (data.cpu_usage!='undefine'){
+        chart_cpu_usage.updateOptions({
+          series: [data.cpu_usage],
+        });
+      }
+      if (data.mem_usage!='undefine'){
+        chart_mem_usage.updateOptions({
+          series: [data.mem_usage],
+        });
+        $('#mem_data').text(roundTo(data.mem_used, 2)+' MB/'+roundTo(data.mem_total, 2)+' MB')
+      }
+      var i = 1;
+      for (const [key, value] of Object.entries(data.disk_datas)) {
+        window['chart_'+i].updateOptions({
+          series: [data.disk_datas[`${key}`][2]],
+        });
+        $('#disk_data_'+i).text(roundTo(data.disk_datas[`${key}`][1]-data.disk_datas[`${key}`][0], 2)+' GB/'+roundTo(data.disk_datas[`${key}`][1],2)+' GB')
+        i=i++;
+      }
+
+
+    },
+    error: function(xhr, status, error) {
+      // 失敗
+    }
+  });
+ }
+
+ setInterval(update_system_status,1000);
+
+ roundTo = function( num, decimal ) { return Math.round( ( num + Number.EPSILON ) * Math.pow( 10, decimal ) ) / Math.pow( 10, decimal ); }
+</script>
+</body>
+</html>

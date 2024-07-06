@@ -43,7 +43,7 @@ class All extends Controller
         if($loadcache==1){
             $this->load_page_cache($tpl,$type);
         }
-
+        
 
         $html = $this->fetch($tpl);
         if($GLOBALS['config']['app']['compress'] == 1){
