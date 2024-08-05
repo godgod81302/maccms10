@@ -98,8 +98,7 @@ class Index extends Base
 
 
     public function test()
-    {
-        // print_r($this->getAdminDashboardData());exit;
+    {   
         $menus = @include MAC_ADMIN_COMM . 'auth.php';
 
         foreach($menus as $k1=>$v1){
@@ -173,12 +172,16 @@ class Index extends Base
 
     public function welcome()
     {
+        // print_r($this->botlist());exit;
         $version = config('version');
         $update_sql = file_exists('./application/data/update/database.php');
 
+        $this->assign('spider_data',$this->botlist());
+        $this->assign('os_data',$this->get_system_status());
         $this->assign('version',$version);
         $this->assign('update_sql',$update_sql);
         $this->assign('mac_lang',config('default_lang'));
+        $this->assign('dashboard_data',$this->getAdminDashboardData());
 
         $this->assign('admin',$this->_admin);
         $this->assign('title',lang('admin/index/welcome/title'));
@@ -407,7 +410,8 @@ class Index extends Base
         $diskct++;
         $disk[$letter][0] = $this->byte_format(@disk_free_space($is_disk));
         $disk[$letter][1] = $this->byte_format(@disk_total_space($is_disk));
-        $disk[$letter][2] = (100-round(((@disk_free_space($is_disk)/(1024*1024*1024))/(@disk_total_space($is_disk)/(1024*1024*1024)))*100,2));
+        // $disk[$letter][2] = (100-round(((@disk_free_space($is_disk)/(1024*1024*1024))/(@disk_total_space($is_disk)/(1024*1024*1024)))*100,2));
+        $disk[$letter][2] = (round(100-round(((@disk_free_space($is_disk)/(1024*1024*1024))/(@disk_total_space($is_disk)/(1024*1024*1024)))*100,2),2));
         $diskk+=$this->byte_format(@disk_free_space($is_disk));
         $diskz+=$this->byte_format(@disk_total_space($is_disk));
         }
@@ -425,7 +429,7 @@ class Index extends Base
         case 'all':
             foreach (range('b','z') as $letter)
             {
-            $disk = array_merge($disk,$this->get_disk_space($letter));
+            $disk = array_merge($disk,$this->get_disk_space(strtoupper($letter)));
             }
             break;
         default:
@@ -559,24 +563,154 @@ class Index extends Base
         $result = [];
         //已注册总用户数量
         $result['user_count'] = model('User')->count();
+        $result['user_count'] = number_format($result['user_count'],0,'.',',');
         //已审核用户数量
         $result['user_active_count'] = model('User')->where('user_status',1)->count();
+        $result['user_active_count'] = number_format($result['user_active_count'],0,'.',',');
 
-
-        
         $today_start = strtotime(date('Y-m-d 00:00:00'));
         $today_end = $today_start+86399;
         //本日来客量
         $result['today_visit_count'] = model('Visit')->where('visit_time','between',$today_start.','.$today_end)->count();
+        $result['today_visit_count'] = number_format($result['today_visit_count'],0,'.',',');
         //本日总入金
         $result['today_money_get']  = model('Order')->where('order_time','between',$today_start.','.$today_end)->where('order_status',1)->sum('order_price');
-        
+        $result['today_money_get'] = number_format($result['today_money_get'],2,'.',',');
         //前七天 每日用户访问数
-        $result['seven_day_visit_data'] = Db::query("select FROM_UNIXTIME(visit_time, '%Y-%c-%d' ) days,count(*) count from (SELECT * from mac_visit where visit_time >= (unix_timestamp(CURDATE())-604800)) as temp group by days");
+        $tmp_arr = Db::query("select FROM_UNIXTIME(visit_time, '%Y-%c-%d' ) days,count(*) count from (SELECT * from mac_visit where visit_time >= (unix_timestamp(CURDATE())-604800)) as temp group by days");
+        $result['seven_day_visit_day'] = [];
+        $result['seven_day_visit_count'] = [];
+
+        $result['raise_visit_user_today'] = 0;
+        if (is_array($tmp_arr) && count($tmp_arr)>1 && (strtotime(end($tmp_arr)['days'])==strtotime(date('Y-m-d')) ) ){
+            $yesterday_visit_count = $tmp_arr[count($tmp_arr)-2]['count'];
+            $lastday_visit_count = end($tmp_arr)['count'];
+            $result['raise_visit_user_today'] =  number_format((($lastday_visit_count-$yesterday_visit_count)/$yesterday_visit_count)*100,2,'.',',');
+        }
+
+        foreach( $tmp_arr as $data){
+            array_push($result['seven_day_visit_day'],$data['days']);
+            array_push($result['seven_day_visit_count'],$data['count']);
+        }
+        
+        //近七日用户访问总量
+        $result['seven_day_visit_total_count'] = 0;
+        foreach ( $result['seven_day_visit_data'] as $k=>$value ){
+            $result['seven_day_visit_total_count'] = $result['seven_day_visit_total_count'] + $value['count'];
+        }
+        $result['seven_day_visit_total_count'] = number_format($result['seven_day_visit_total_count'],0,'.',',');
         //前七天 每日用户注册数
         $result['seven_day_reg_data'] =  Db::query("select FROM_UNIXTIME(user_reg_time, '%Y-%c-%d' ) days,count(*) count from (SELECT * from mac_user where user_reg_time >= (unix_timestamp(CURDATE())-604800)) as tmp group by days");
-       
+        //近七日用户注册总量
+        $result['seven_day_reg_total_count'] = 0;
+        foreach ( $result['seven_day_reg_data'] as $k=>$value ){
+            $result['seven_day_reg_total_count'] = $result['seven_day_reg_total_count'] + $value['count'];
+        }
+    
+        //比較前一天的註冊量漲幅
+        $result['raise_reg_user_today'] = 0;
+        if (is_array($result['seven_day_reg_data']) && count($result['seven_day_reg_data'])>1 && (strtotime(end($result['seven_day_reg_data'])['days'])==strtotime(date('Y-m-d')) ) ){
+            $yesterday_reg_count = $result['seven_day_reg_data'][count($result['seven_day_reg_data'])-2]['count'];
+            $lastday_reg_count = end($result['seven_day_reg_data'])['count'];
+            $result['raise_reg_user_today'] =  number_format((($lastday_reg_count-$yesterday_reg_count)/$yesterday_reg_count)*100,2,'.',',');
+        }
+
+        $result['seven_day_reg_total_count'] = number_format($result['seven_day_reg_total_count'],0,'.',',');
         return $result;
+    }
+    public function rangeDateDailyVisit(){
+        
+        $range_daily_visit_data = Db::query("select FROM_UNIXTIME(visit_time, '%Y-%c-%d' ) days,count(*) count from (SELECT * from mac_visit where visit_time >= ".strtotime($_POST['startDate'])."&&  visit_time <= ".strtotime($_POST['endDate'])." ) as temp group by days");
+        $result = [];
+        $range_visit_day = [];
+        $range_visit_count = [];
+        $range_visit_sum = 0;
+        foreach( $range_daily_visit_data as $data ){
+            $range_visit_sum = $range_visit_sum + $data['count'];
+            array_push($range_visit_day,$data['days']);
+            array_push($range_visit_count,$data['count']);
+        }
+
+        $result['days'] = $range_visit_day;
+        $result['count'] = $range_visit_count;
+        $result['sum'] = $range_visit_sum;
+        return json_encode($result);
+    }
+
+    public function botlist(){
+        $day_arr =[];
+        //列出最近10天的日期
+        for($i=0;$i<7;$i++){
+            $day_arr[$i] = date('Y-m-d',time()-$i*60*60*24);
+        }
+        $google_arr=[];
+        $baidu_arr=[];
+        $sogou_arr=[];
+        $soso_arr=[];
+        $yahoo_arr=[];
+        $msn_arr=[];
+        $msn_bot_arr=[];
+        $sohu_arr=[];
+        $yodao_arr=[];
+        $twiceler_arr=[];
+        $alexa_arr=[];
+        $bot_list=[];
+        foreach ($day_arr as $day_vo){
+            if (file_exists(ROOT_PATH . 'runtime/log/bot/'.$day_vo.'.txt')){
+                $bot_content = file_get_contents(ROOT_PATH . 'runtime/log/bot/'.$day_vo.'.txt');
+            }else{
+                $bot_content = '';
+            }
+            $google_arr[$day_vo]=substr_count($bot_content,'Google');
+            $baidu_arr[$day_vo]=substr_count($bot_content,'Baidu');
+            $sogou_arr[$day_vo]=substr_count($bot_content,'Sogou');
+            $soso_arr[$day_vo]=substr_count($bot_content,'SOSO');
+            $yahoo_arr[$day_vo]=substr_count($bot_content,'Yahoo');
+            $msn_arr[$day_vo]=substr_count($bot_content,'MSN');
+            $msn_bot_arr[$day_vo]=substr_count($bot_content,'msnbot');
+            $sohu_arr[$day_vo]=substr_count($bot_content,'Sohu');
+            $yodao_arr[$day_vo]=substr_count($bot_content,'Yodao');
+            $twiceler_arr[$day_vo]=substr_count($bot_content,'Twiceler');
+            $alexa_arr[$day_vo]=substr_count($bot_content,'Alexa');
+        }
+        $bot_list['Google']['key']=array_keys($google_arr);
+        $bot_list['Google']['values']=array_values($google_arr);
+        $bot_list['Baidu']['keys']=array_keys($baidu_arr);
+        $bot_list['Baidu']['values']=array_values($baidu_arr);
+        $bot_list['Sogou']['keys']=array_keys($sogou_arr);
+        $bot_list['Sogou']['values']=array_values($sogou_arr);
+        $bot_list['SOSO']['keys']=array_keys($soso_arr);
+        $bot_list['SOSO']['values']=array_values($soso_arr);
+        $bot_list['Yahoo']['keys']=array_keys($yahoo_arr);
+        $bot_list['Yahoo']['values']=array_values($yahoo_arr);
+        $bot_list['MSN']['keys']=array_keys($msn_arr);
+        $bot_list['MSN']['values']=array_values($msn_arr);
+        $bot_list['msnbot']['keys']=array_keys($msn_bot_arr);
+        $bot_list['msnbot']['values']=array_values($msn_bot_arr);
+        $bot_list['Sohu']['keys']=array_keys($sohu_arr);
+        $bot_list['Sohu']['values']=array_values($sohu_arr);
+        $bot_list['Yodao']['keys']=array_keys($yodao_arr);
+        $bot_list['Yodao']['values']=array_values($yodao_arr);
+        $bot_list['Twiceler']['keys']=array_keys($twiceler_arr);
+        $bot_list['Twiceler']['values']=array_values($twiceler_arr);
+        $bot_list['Alexa']['keys']=array_keys($alexa_arr);
+        $bot_list['Alexa']['values']=array_values($alexa_arr);
+
+        if(!empty($_POST['category'])){
+            return $bot_list[$_POST['category']];
+        }
+        else{
+            return $bot_list;
+        }
+    }
+
+    public function botlog(){
+        $parm = input();
+        $data = $parm['data'];
+        $bot_content = file_get_contents(ROOT_PATH . 'runtime/log/bot/'.$data.'.txt');
+        $bot_list = array_slice(array_reverse(explode("\r\n",trim($bot_content))),0,20);
+        $this->assign('bot_list',$bot_list);
+        return $this->fetch('admin@others/botlog');
     }
 
 }

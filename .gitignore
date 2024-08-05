@@ -22,3 +22,5 @@ application/data/install/install.lock
 application/extra/maccms.php
 template/*
 
+application/admin/controller/cpu_usage.vbs
+application/admin/controller/memory_usage.vbs

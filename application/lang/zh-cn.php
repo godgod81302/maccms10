@@ -791,7 +791,8 @@ https://www.baidu.com/123.jpg
         3，支持系统模块，例如： 文章管理,art/data<br>
         4，支持行分隔符，例如： 分隔符,###',
 
-
+    'admin/index/welcome/disk_detail_tips' =>'移动到图表上查看磁碟详细资讯',
+    'admin/index/welcome/mem_detail' =>'内存占用',
     'admin/index/welcome/filed_os' =>'运行环境',
     'admin/index/welcome/filed_host' =>'服务器IP/端口',
     'admin/index/welcome/filed_php_ver' =>'PHP版本',
@@ -807,6 +808,14 @@ https://www.baidu.com/123.jpg
     'admin/index/welcome/filed_last_login_ip' =>'上次登录IP',
     'admin/index/welcome/filed_last_login_time' =>'上次登录时间',
     'admin/index/welcome/tip_warn' =>'请不要修改系统文件，以免升级出现故障！本程序不内置任何数据，添加任何数据均是个人行为！请在遵守法律的前提下使用程序，否则后果自负！',
+    'admin/index/welcome/today_visit_count'  => '本日用户访问',
+    'admin/index/welcome/today_money_get'  => '本日入金总额',
+    'admin/index/welcome/system_status'  => '系统资讯',
+    'admin/index/welcome/disk_space_usage'  => '磁碟空间占比',
+    'admin/index/welcome/seven_day_visit_data'  => '近七日用户访问量',
+    'admin/index/welcome/seven_day_reg_data'  => '近七日用户注册量',
+    'admin/index/welcome/reg_users_count'  => '注册用户数',
+    'admin/index/welcome/active_reg_users_count'  => '已审核用户数',
 
     'admin/index/quick_tit'=>'↓↓↓自定义菜单区域↓↓↓',
     'admin/index/title'=>'后台管理中心',

@@ -791,7 +791,8 @@ https://www.baidu.com/123.jpg
         3，支持系統模塊，例如： 文章管理,art/data<br>
         4，支持行分隔符，例如： 分隔符,###',
 
-
+    'admin/index/welcome/disk_detail_tips' =>'移動到圖表上可查看詳細資訊',
+    'admin/index/welcome/mem_detail' =>'記憶體占用',
     'admin/index/welcome/filed_os' =>'運行環境',
     'admin/index/welcome/filed_host' =>'服務器IP/端口',
     'admin/index/welcome/filed_php_ver' =>'PHP版本',
@@ -807,7 +808,15 @@ https://www.baidu.com/123.jpg
     'admin/index/welcome/filed_last_login_ip' =>'上次登錄IP',
     'admin/index/welcome/filed_last_login_time' =>'上次登錄時間',
     'admin/index/welcome/tip_warn' =>'請不要修改系統文件，以免升級出現故障！本程序不內置任何數據，添加任何數據均是個人行為！請在遵守法律的前提下使用程序，否則後果自負！',
-
+    'admin/index/welcome/today_visit_count'  => '本日用戶討論',
+    'admin/index/welcome/today_money_get'  => '本日入金總額',
+    'admin/index/welcome/system_status'  => '系統資訊',
+    'admin/index/welcome/disk_space_usage'  => '磁碟空間占比',
+    'admin/index/welcome/seven_day_visit_data'  => '近七日用戶訪問量',
+    'admin/index/welcome/seven_day_reg_data'  => '近七日用戶註冊量',
+    'admin/index/welcome/reg_users_count'  => '註冊用戶數',
+    'admin/index/welcome/active_reg_users_count'  => '已審核用戶數',
+    
     'admin/index/quick_tit'=>'↓↓↓自定義菜單區域↓↓↓',
     'admin/index/title'=>'後臺管理中心',
     'admin/index/welcome/title'=>'歡迎頁面',

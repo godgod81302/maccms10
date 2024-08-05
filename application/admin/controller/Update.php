@@ -27,9 +27,12 @@ class Update extends Base
         if(empty($file)){
             return $this->error(lang('param_err'));
         }
+
         $version = config('version.code');
         $url = $this->_url .$file . '.zip?t='.time();
-
+        echo 123;
+        exit;
+        return $this->error(lang('param_err'));
         echo $this->fetch('admin@public/head');
         echo "<div class='update'><h1>".lang('admin/update/step1_a')."</h1><textarea rows=\"25\" class='layui-textarea' readonly>".lang('admin/update/step1_b')."\n";
         ob_flush();flush();

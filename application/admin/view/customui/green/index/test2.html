@@ -1,6 +1,38 @@
 {include file="../../../application/admin/view/customui/green/public/head" /}
 
 <body class="mb-[40px] sm:mb-[64px] bg-gray-50 dark:bg-neutral-900">
+  <button id="modal_btn" type="button" class="hiden py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" data-hs-overlay="#hs-vertically-centered-modal">
+  </button>
+
+  <div id="hs-vertically-centered-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto" role="dialog" tabindex="-1" aria-labelledby="hs-vertically-centered-modallabel">
+    <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+      <div class="relative flex flex-col bg-white shadow-lg rounded-xl dark:bg-neutral-900">
+        <div class="absolute top-2 z-[10] end-2">
+          <button type="button" class="inline-flex justify-right items-right size-8 text-sm font-semibold rounded-lg border border-transparent bg-white/10 text-white hover:bg-white/20 disabled:opacity-50 disabled:pointer-events-none" aria-label="Close" data-hs-overlay="#hs-vertically-centered-modal">
+            <span class="sr-only">Close</span>
+            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+  
+        <div class="aspect-w-16 aspect-h-8">
+          <img class="w-full object-cover rounded-t-xl" src="__STATIC__/images/inform-dialog-bg-dark.jfif" alt="Modal Hero Image">
+        </div>
+  
+        <div class="p-4 sm:p-10 overflow-y-auto">
+          <div id="info_model_content" class="text-left  font-semibold text-gray-800 rounded-lg bg-white p-3 dark:bg-neutral-800 dark:text-neutral-200">
+          </div>
+  
+          <div class="mt-6 flex justify-center gap-x-4">
+            <button type="button" class="py-2 px-3 inline-flex items-right gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" data-hs-overlay="#hs-vertically-centered-modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- ========== HEADER ========== -->
   <header class="lg:ms-[260px] fixed top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 bg-white border-b border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">
     <div class="flex justify-between xl:grid xl:grid-cols-3 basis-full items-center w-full py-2.5 px-2 sm:px-5" aria-label="Global">
@@ -188,25 +220,23 @@
                 <div class="h-[480px] overflow-y-auto overflow-hidden [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
                   <ul id="notify_tab" class="divide-y divide-gray-200 dark:divide-neutral-800">
                     <!-- List Item -->
+                    {if condition="$update_sql"}
                     <li class="relative group w-full flex gap-x-5 text-start bg-gray-100 dark:bg-neutral-800 p-5">
                       <div class="relative flex-shrink-0">
                         <span class="absolute top-4 -start-3 size-2 bg-blue-600 rounded-full dark:bg-blue-500"></span>
                       </div>
                       <div class="grow">
                         <span class="block text-sm font-medium text-gray-800 dark:text-neutral-300">
-                          {if condition="$update_sql"}
                           {:lang('admin/index/welcome/tip_update_db')}
-                          {/if}
                         </span>
-                        {if condition="$update_sql"}
                         <font class="tif s20">{:lang('admin/index/welcome/tip_update_db_txt')}</font><a class="j-iframe" title="{:lang('admin/index/welcome/tip_update_go')}" data-href="{:url('update/step2')}"><font class="tit s20">{:lang('admin/index/welcome/tip_update_go')}</font></a>
-                        {/if}
                       </div>
 
                       <div>
 
                       </div>
                     </li>
+                    {/if}
                   </ul>
                   <!-- End List Group -->
                 </div>
@@ -1635,6 +1665,24 @@
     $(".tabs li:last-child").addClass("active");
     $("#sub_content_"+id).remove();
   }
+
+  window.onload = () => {
+    addIframe('111','欢迎页面','/admin.php/admin/index/welcome.html')
+    var welcomeiFrame = document.getElementById('sub_content_111');
+    welcomeiFrame.onload = welcomeiFrame.onreadystatechange = function(){
+      if (this.readyState && this.readyState != 'complete' ) return;
+      else{
+        var update_info = $(".tbinfo",document.getElementById('sub_content_111').contentWindow.document).html();
+        if ( update_info!='' && update_info!='undefine'){
+          $('#info_model_content').html($(".tbinfo",document.getElementById('sub_content_111').contentWindow.document).html())
+          $('#modal_btn').click()
+        }
+
+      }
+    }
+  }
+
+
   </script>
 
   <script type="text/javascript" src="__STATIC__/js/admin_common.js?{$MAC_VERSION}"></script>
